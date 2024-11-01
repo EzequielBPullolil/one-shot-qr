@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card ">
+    <div class="card-body ">
+        <form action="" method="post" class="">
+            <div class="row g-2">
+                <div class="col-1">
+                    <label for="urlInput" class="col-form-label">Url</label>
+                </div>
+                <div class="col">
+                    <input type="url" id="urlInput" class="form-control"/>
+                </div>
+            </div>
+            <div class="row g-2">
+                <div class="col-1">
+                    <label for="qrCap" class="col-form-label">Qr cap</label>
+                </div>
+                <div class="col">
+                    <input type="number" id="qrCap" class="form-control" min="1"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
