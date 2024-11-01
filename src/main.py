@@ -9,7 +9,11 @@ app.secret_key = "s"
 def renderHomePage():
     if 'ip' not in session:
         session['ip'] = request.remote_addr
+    else:
+        remove_qr(session['qrCode_name'])
+        
     return render_template('index.html')
+    
 @app.route('/tmp/<path:filename>')
 def serve_image(filename):
     return send_file(f'../tmp/{filename}')
