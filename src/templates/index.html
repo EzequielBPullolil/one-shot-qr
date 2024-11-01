@@ -1,25 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="card ">
-    <div class="card-body ">
-        <form action="" method="post" class="">
-            <div class="row g-2">
-                <div class="col-1">
-                    <label for="urlInput" class="col-form-label">Url</label>
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card w-50 h-50 ">
+        <div class="card-body align-items-right">
+            <form action="/qr" method="post" class="">
+                <div class="input-group mb-3" >
+                        <label for="urlInput" class="input-group-text">Url</label>
+                        <input type="url" id="urlInput" name="url" class="form-control"/>
                 </div>
-                <div class="col">
-                    <input type="url" id="urlInput" class="form-control"/>
+                <div class="input-group mb-3" >
+                        <label for="qrCap" class="input-group-text">Cap</label>
+                        <input type="number" id="qrCap" name="cap" class="form-control " min="1"/>
                 </div>
-            </div>
-            <div class="row g-2">
-                <div class="col-1">
-                    <label for="qrCap" class="col-form-label">Qr cap</label>
+                <div class="col justify-content-end">
+                        <button type="reset" class="btn btn-danger" >Reset</button>     
+                        <button class="btn btn-success">Generate QR</button>     
                 </div>
-                <div class="col">
-                    <input type="number" id="qrCap" class="form-control" min="1"/>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

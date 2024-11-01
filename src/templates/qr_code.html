@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block content %}
+<script>
+    async function copyToClipboard() {
+        var img = document.getElementById('qrCodeIMG')
+        var src = img.src;
+        const response = await fetch(src);
+        const blob = await response.blob();
+        const item = new ClipboardItem({ 'image/png': blob });
+        await navigator.clipboard.write([item]);
+    }
+
+    async function downloadImage() {
+        var img = document.getElementById('qrCodeIMG')
+        var src = img.src;
+        const response = await fetch(src);
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+
+        // Crea un enlace temporal para la descarga
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'codigo_qr.png'; 
+        document.body.appendChild(a); 
+        a.click();
+        document.body.removeChild(a); 
+        URL.revokeObjectURL(url);
+    }
+</script>
+<h1>Generated code</h1>
+<img id="qrCodeIMG" src="{{url_for('serve_image', filename=qr_code_path)}}" />
+<p>
+  Please download the QR code before leaving the site. Once you leave the page,
+  you will lose access to the QR code, although it will remain valid.
+</p>
+
+<button onclick="downloadImage()" class="btn btn-info"> Download </button>
+<button onclick="copyToClipboard()" class="btn btn-info"> Copy to clipboard</button>
+{% endblock %}
