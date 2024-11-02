@@ -27,7 +27,7 @@
     }
 </script>
 <h1>Generated code</h1>
-<img id="qrCodeIMG" src="{{url_for('serve_image', filename=qr_code_path)}}" />
+<img id="qrCodeIMG" src="{{url_for('serve_image', filename=qr_code_id)}}" />
 <p>
   Please download the QR code before leaving the site. Once you leave the page,
   you will lose access to the QR code, although it will remain valid.
@@ -35,4 +35,18 @@
 
 <button onclick="downloadImage()" class="btn btn-info"> Download </button>
 <button onclick="copyToClipboard()" class="btn btn-info"> Copy to clipboard</button>
+<script>
+    setTimeout(function() {
+        var img = document.getElementById('qrCodeIMG');
+        var src = img.src;
+
+        fetch(src, {
+            method: "DELETE"
+        }).then(() => {
+            console.log("ended");
+        }).catch(error => {
+            console.error("Error:", error);
+        });
+    }, 300);
+</script>
 {% endblock %}
