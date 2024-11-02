@@ -1,5 +1,6 @@
 from os import environ
 from .services.QrCodeManager import QrCodeManager
+from .services.UrlManager import UrlManager
 from flask import Flask, render_template, request, send_file, session, after_this_request, json
 import os 
 app = Flask(__name__)
@@ -14,9 +15,15 @@ def renderHomePage():
 @app.post("/qr")
 def generateQr():
     url, cap = request.form["url"], request.form["cap"]
-    qrManager = QrCodeManager(url)
-    
+    print(app.config)
+    url_manager = UrlManager(
+        appHost =  app.config.get('APP_HOST'),
+        encryptCode = app.config.get('URL_ENCRYPT_CODE')
+    )
+    qr_url = url_manager.generate_qr_url(url, cap)
+    qrManager = QrCodeManager(qr_url)
     qrCode = qrManager.generate_qr()
 
+    
     session["qrCode"] = qrCode
     return render_template('qr_code.html', qr_image=qrCode)
