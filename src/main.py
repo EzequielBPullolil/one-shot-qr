@@ -1,8 +1,7 @@
 from os import environ
 from .services.QrCodeManager import QrCodeManager
 from .services.UrlManager import UrlManager
-from flask import Flask, render_template, request, send_file, session, after_this_request, json
-import os 
+from flask import Flask, render_template, request, send_file, session, after_this_request, json, redirect
 app = Flask(__name__)
 app.secret_key = environ.get("SECRET_KEY")
 
@@ -15,7 +14,6 @@ def renderHomePage():
 @app.post("/qr")
 def generateQr():
     url, cap = request.form["url"], request.form["cap"]
-    print(app.config)
     url_manager = UrlManager(
         appHost =  app.config.get('APP_HOST'),
         encryptCode = app.config.get('URL_ENCRYPT_CODE')
@@ -27,3 +25,18 @@ def generateQr():
     
     session["qrCode"] = qrCode
     return render_template('qr_code.html', qr_image=qrCode)
+
+
+@app.get("/shortcut/<string:url_uuid>")
+def redirect_to_real_url(url_uuid):
+    url_manager = UrlManager(
+        appHost =  app.config.get('APP_HOST'),
+        encryptCode = app.config.get('URL_ENCRYPT_CODE')
+    )
+    
+    return redirect(
+        location=url_manager.find_real_url(
+            uuid=url_uuid,
+            host_ip=request.remote_addr), 
+        code=302
+    )

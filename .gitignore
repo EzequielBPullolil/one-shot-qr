@@ -42,6 +42,8 @@ pytest_cache/
 *.mo
 *.pot
 
+*.db
+
 tmp/
 # Archivos de Jupyter Notebook
 .ipynb_checkpoints
