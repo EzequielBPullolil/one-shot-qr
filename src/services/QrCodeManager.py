@@ -5,10 +5,10 @@ from flask import current_app
 from datetime import datetime
 class QrCodeManager():
     def __init__(self, url: str):
-        self._url = url
+        self.__url = url
         
     def generate_qr(self): 
-        img = qrcode.make(self._url)
+        img = qrcode.make(self.__url)
         buf = BytesIO()
         img.save(buf, format="PNG")
         qr_base64 = base64.b64encode(buf.getvalue()).decode("utf-8")

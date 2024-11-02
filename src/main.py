@@ -3,10 +3,10 @@ from .services.QrCodeManager import QrCodeManager
 from flask import Flask, render_template, request, send_file, session, after_this_request, json
 import os 
 app = Flask(__name__)
-
-app.config['TMP_DIR'] = environ.get("TMP_DIR")
-app.config['URL_ENCRYPT_CODE'] = environ.get("URL_ENCRYPT_CODE")
 app.secret_key = environ.get("SECRET_KEY")
+
+app.config['APP_HOST'] = environ.get("APP_HOST", 'http://localhost:5000')
+app.config['URL_ENCRYPT_CODE'] = environ.get("URL_ENCRYPT_CODE",'fake_encrypt' )
 @app.get("/")
 def renderHomePage():
     return render_template('index.html')
