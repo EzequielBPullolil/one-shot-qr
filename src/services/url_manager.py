@@ -4,7 +4,7 @@ _
 import threading
 import shortuuid
 from .url_encryptor import UrlEncryptor
-from ..database.Url import UrlModel
+from ..database.url import UrlModel
 class UrlManager:
     '''
         UrlManager provide url services to the Flask routes
