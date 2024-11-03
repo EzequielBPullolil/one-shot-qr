@@ -1,42 +1,63 @@
+""" Flask app and routes """
 from os import environ
+from flask import Flask, render_template, request, session
 from .services.QrCodeManager import QrCodeManager
 from .services.UrlManager import UrlManager
-from flask import Flask, render_template, request, send_file, session, after_this_request, json, redirect
 app = Flask(__name__)
-app.secret_key = environ.get("SECRET_KEY")
 
-app.config['APP_HOST'] = environ.get("APP_HOST", 'http://localhost:5000')
-app.config['URL_ENCRYPT_CODE'] = environ.get("URL_ENCRYPT_CODE",'fake_encrypt' )
+app.secret_key = environ.get("SECRET_KEY")
+app.config['URL_ENCRYPT_CODE'] = environ.get(
+    "URL_ENCRYPT_CODE", 'fake_encrypt')
+
+
 @app.get("/")
-def renderHomePage():
+def render_home():
+    '''
+    _ 
+    '''
     return render_template('index.html')
 
+
 @app.post("/qr")
-def generateQr():
+def generate_qr():
+    '''
+        Generates a qr code using the url and cap data 
+        received from form
+    '''
     url, cap = request.form["url"], request.form["cap"]
     url_manager = UrlManager(
-        appHost =  app.config.get('APP_HOST'),
-        encryptCode = app.config.get('URL_ENCRYPT_CODE')
+        appHost=app.config.get('APP_HOST'),
+        encryptCode=app.config.get('URL_ENCRYPT_CODE')
     )
     qr_url = url_manager.generate_qr_url(url, cap)
-    qrManager = QrCodeManager(qr_url)
-    qrCode = qrManager.generate_qr()
+    qr_manager = QrCodeManager(qr_url)
+    qr_code = qr_manager.generate_qr()
 
-    
-    session["qrCode"] = qrCode
-    return render_template('qr_code.html', qr_image=qrCode)
+    session["qrCode"] = qr_code
+    return render_template('qr_code.html', qr_image=qr_code)
 
 
 @app.get("/shortcut/<string:url_uuid>")
 def redirect_to_real_url(url_uuid):
+    '''
+        Uses the url_uuid proved by url param to find
+        in the DB the url maped 
+    '''
+    if 'requested_host' in session:
+        session_addrs, session_url_uuid = session['requested_host']
+        if session_addrs == request.remote_addr and session_url_uuid == url_uuid:
+            return render_template('error.html', error_name='You already claimed this url')
+
+    session['requested_host'] = (request.remote_addr, url_uuid)
+    print(app.config)
     url_manager = UrlManager(
-        appHost =  app.config.get('APP_HOST'),
-        encryptCode = app.config.get('URL_ENCRYPT_CODE')
+        appHost=app.config.get('APP_HOST'),
+        encryptCode=app.config.get('URL_ENCRYPT_CODE')
     )
-    
-    return redirect(
-        location=url_manager.find_real_url(
-            uuid=url_uuid,
-            host_ip=request.remote_addr), 
-        code=302
-    )
+
+    try:
+        (real_url, cap) = url_manager.find_real_url(
+            uuid=url_uuid, host_ip=request.remote_addr)
+        return render_template('get_url.html', url=real_url, cap=cap)
+    except:
+        return render_template('error.html', error_name='Url not founded or cap exceded')
