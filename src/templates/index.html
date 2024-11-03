@@ -1,27 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="card w-50 shadow">
-        <div class="card-body">
-            <h5 class="card-title text-center">QR Generator</h5>
-            <form action="/qr" method="post">
-                <div class="mb-3">
-                    <label for="urlInput" class="form-label">URL</label>
-                    <input type="url" id="urlInput" name="url" class="form-control" required placeholder="Enter URL here"/>
-                    <div class="form-text">Please enter a valid URL.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="qrCap" class="form-label">Cap</label>
-                    <input type="number" id="qrCap" name="cap" class="form-control" min="1" required placeholder="Enter capacity"/>
-                    <div class="form-text">Maximum number of visists for the QR code.</div>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <button type="reset" class="btn btn-outline-danger">Reset</button>
-                    <button type="submit" class="btn btn-primary">Generate QR</button>
-                </div>
-            </form>
+<section class="d-flex justify-content-center align-items-center vh-100" aria-label="Qr generation">
+    <div class="row justify-content-center w-100">
+        <!-- Usamos col-12 para pantallas pequeñas, col-md-8 para medianas y col-lg-6 para grandes -->
+        <div class="card col-12 col-md-8 col-lg-6 shadow">
+            <div class="card-body">
+                <h5 class="card-title text-center">Generate QR</h5>
+                <form action="/qr" method="post">
+                    <div class="mb-3">
+                        <label for="urlInput" class="form-label">URL</label>
+                        <input type="url" id="urlInput" name="url" class="form-control" required placeholder="Enter URL here"/>
+                        <div class="form-text">Please enter a valid URL.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="qrCap" class="form-label">Cap</label>
+                        <input type="number" id="qrCap" name="cap" class="form-control" min="1" required placeholder="Enter capacity"/>
+                        <div class="form-text">Maximum number of visits for the QR code.</div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="reset" class="btn btn-outline-danger">Reset</button>
+                        <button type="submit" class="btn btn-primary">Generate QR</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-
+</section>
 {% endblock %}

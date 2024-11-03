@@ -1,13 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="d-flex justify-content-center align-items-center vh-100">
+<section class="d-flex justify-content-center align-items-center vh-100">
     <div class="col-md-6">
-        <div class="card">
+        <div class="card shadow border-2">
             <div class="card-body text-center">
-                <h5 class="card-title">Url found</h5>
-                <a href={{url}} class="btn btn-danger">REDIRECT</a>
+                <div id="verifing">
+                    <h2 class="card-title mb-4">Verifying url</h2>
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only"></span>
+                      </div>
+                </div>
+                <div id="verified" style="display: none;">
+                    <h2 class="card-title mb-4">Verified URL</h2>
+                    <p class="card-text text-muted">The scanned URL is valid and ready to redirect.</p>
+                    <a href="{{url}}" class="btn btn-primary" aria-label="Redirect to verified URL">Go to URL</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<script>
+    setTimeout(()=>{
+        const verifing = document.getElementById('verifing')
+        const verified = document.getElementById('verified')
+
+        verifing.style.display = "none"
+        verified.style.display = "block";
+    }, 2000)
+</script>
 {% endblock %}
