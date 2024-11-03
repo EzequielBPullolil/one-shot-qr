@@ -1,8 +1,8 @@
 """ Flask app and routes """
 from os import environ
 from flask import Flask, render_template, request, session
-from .services.QrCodeManager import QrCodeManager
-from .services.UrlManager import UrlManager
+from .services.qr_code_manager import QrCodeManager
+from .services.url_manager import UrlManager
 app = Flask(__name__)
 
 app.secret_key = environ.get("SECRET_KEY")
@@ -26,8 +26,8 @@ def generate_qr():
     '''
     url, cap = request.form["url"], request.form["cap"]
     url_manager = UrlManager(
-        appHost=app.config.get('APP_HOST'),
-        encryptCode=app.config.get('URL_ENCRYPT_CODE')
+        app_host=app.config.get('APP_HOST'),
+        encrypt_code=app.config.get('URL_ENCRYPT_CODE')
     )
     qr_url = url_manager.generate_qr_url(url, cap)
     qr_manager = QrCodeManager(qr_url)
@@ -51,13 +51,13 @@ def redirect_to_real_url(url_uuid):
     session['requested_host'] = (request.remote_addr, url_uuid)
     print(app.config)
     url_manager = UrlManager(
-        appHost=app.config.get('APP_HOST'),
-        encryptCode=app.config.get('URL_ENCRYPT_CODE')
+        app_host=app.config.get('APP_HOST'),
+        encrypt_code=app.config.get('URL_ENCRYPT_CODE')
     )
 
     try:
         (real_url, cap) = url_manager.find_real_url(
-            uuid=url_uuid, host_ip=request.remote_addr)
+            uuid=url_uuid)
         return render_template('get_url.html', url=real_url, cap=cap)
     except:
         return render_template('error.html', error_name='Url not founded or cap exceded')
