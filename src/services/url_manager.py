@@ -30,7 +30,6 @@ class UrlManager:
         return self.__generate_shortcut_url(url_id)
 
     def __generate_shortcut_url(self, uuid: str) -> str:
-        print(f'{self.__app_host}/shortcut/{uuid}')
         return f'{self.__app_host}/shortcut/{uuid}'
 
 
